@@ -1,6 +1,6 @@
 # 🏗️ foundry-fund-me-f25
 
-A Solidity smart contract that allows users to fund a contract owner in **USD-equivalent ETH**, using a **Chainlink Price Feed** for conversion. The contract ensures that only those who meet the **minimum funding requirement** can contribute, and only the **owner** can withdraw funds.  
+A Solidity smart contract project that allows users to fund a contract owner in **USD-equivalent ETH**, using a **Chainlink Price Feed** for conversion. The contract ensures that only those who meet the **minimum funding requirement** can contribute, and only the **owner** can withdraw funds.  
 This project is part of my smart contract security research journey.
 
 ---
@@ -28,18 +28,24 @@ This project is part of my smart contract security research journey.
 ## 📂 Directory Structure
 
 ```
-.
-├── src
-│   ├── FundMe.sol               # Core contract
-│   ├── PriceConverter.sol       # Library for conversion logic
-│
-├── script
-│   ├── DeployFundMe.s.sol       # Deploy script
-│   ├── HelperConfig.s.sol       # Network configuration and mocks
-│   └── Interactions.s.sol       # Script to interact with deployed contract
-│
-├── test                         # Unit tests
-└── foundry.toml                 # Foundry config
+foundry-fund-me-f25/
+├── lib/                    # Dependencies (via forge install)
+├── script/                 # Deployment and interaction scripts
+│   ├── DeployFundMe.s.sol
+│   ├── HelperConfig.s.sol
+│   └── Interactions.s.sol
+├── src/                    # Solidity contracts
+│   ├── FundMe.sol
+│   └── PriceConverter.sol
+├── test/                   # Test suite
+│   ├── integration/
+│   │   └── FundMeTestIntegration.t.sol
+│   └── unit/
+│       └── FundMeTest.t.sol
+├── mock/                   # Mock contracts
+│   └── MockV3Aggregator.sol
+├── foundry.toml            # Foundry configuration file
+└── README.md               # This file
 ```
 
 ---
