@@ -5,17 +5,17 @@ import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../../src/FundMe.sol";
 import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
 
-contract FundMeTest is Test{
+contract FundMeTest is Test {
     FundMe fundMe;
     address alice = makeAddr("alice");
     uint256 constant STARTING_BALANCE = 10 ether;
     uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant GAS_PRICE = 1;
 
-    function setUp() external{
-    DeployFundMe deployFundMe = new DeployFundMe();
-    fundMe = deployFundMe.run();
-    vm.deal(alice, STARTING_BALANCE);
+    function setUp() external {
+        DeployFundMe deployFundMe = new DeployFundMe();
+        fundMe = deployFundMe.run();
+        vm.deal(alice, STARTING_BALANCE);
     }
 
     function testFundFailsWithoutEnoughETH() public {
@@ -30,15 +30,15 @@ contract FundMeTest is Test{
         _;
     }
 
-    function testMinimumDollarIsFive() public{
+    function testMinimumDollarIsFive() public {
         assertEq(fundMe.MINIMUM_USD(), 5e18);
     }
 
-    function testOwnerIsMsgSender() public{
+    function testOwnerIsMsgSender() public {
         console.log(fundMe.getOwner());
         console.log(msg.sender);
         assertEq(fundMe.getOwner(), msg.sender);
-    } 
+    }
 
     function testPriceFeedVersionIsAccurate() public {
         if (block.chainid == 11155111) {
@@ -48,14 +48,14 @@ contract FundMeTest is Test{
             uint256 version = fundMe.getVersion();
             assertEq(version, 6);
         }
-    }      
+    }
 
     function testFundUpdatesFundDataStructure() public {
         vm.prank(alice);
         fundMe.fund{value: SEND_VALUE}();
         uint256 amountFunded = fundMe.getAddressToAmountFunded(alice);
         assertEq(amountFunded, SEND_VALUE);
-    } 
+    }
 
     function testAddsFunderToArrayOfFunders() public {
         vm.startPrank(alice);
@@ -66,7 +66,7 @@ contract FundMeTest is Test{
         assertEq(funder, alice);
     }
 
-    function testOnlyOwnerCanWithdraw() public {    
+    function testOnlyOwnerCanWithdraw() public {
         vm.expectRevert();
         fundMe.withdraw();
     }
@@ -88,10 +88,7 @@ contract FundMeTest is Test{
         uint256 endingFundMeBalance = address(fundMe).balance;
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            startingFundMeBalance + startingOwnerBalance,
-            endingOwnerBalance
-        );
+        assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance);
     }
 
     function testWithdrawFromMultipleFunders() public funded {
@@ -134,11 +131,10 @@ contract FundMeTest is Test{
 
     function testPrintStorageData() public {
         for (uint256 i = 0; i < 3; i++) {
-        bytes32 value = vm.load(address(fundMe), bytes32(i));
-        console.log("Value at location", i, ":");
-        console.logBytes32(value);
+            bytes32 value = vm.load(address(fundMe), bytes32(i));
+            console.log("Value at location", i, ":");
+            console.logBytes32(value);
         }
-    console.log("PriceFeed address:", address(fundMe.getPriceFeed()));
+        console.log("PriceFeed address:", address(fundMe.getPriceFeed()));
     }
-
 }

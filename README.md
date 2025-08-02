@@ -1,66 +1,119 @@
-## Foundry
+# 🏗️ foundry-fund-me-f25
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A Solidity smart contract that allows users to fund a contract owner in **USD-equivalent ETH**, using a **Chainlink Price Feed** for conversion. The contract ensures that only those who meet the **minimum funding requirement** can contribute, and only the **owner** can withdraw funds.  
+This project is part of my smart contract security research journey.
 
-Foundry consists of:
+---
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## 🚀 Features
 
-## Documentation
+- ✅ Fund the contract with ETH ≥ $5 USD
+- ✅ Uses Chainlink's **ETH/USD price feed** for conversion
+- ✅ Tracks individual funders and their contributions
+- ✅ Allows only the **contract owner** to withdraw funds
+- ✅ Configurable to run on **Sepolia**, **mainnet**, or **Anvil** (local fork)
 
-https://book.getfoundry.sh/
+---
 
-## Usage
+## ⚙️ Technologies Used
 
-### Build
+- [Solidity](https://soliditylang.org/)
+- [Foundry](https://book.getfoundry.sh/)
+- [Chainlink](https://chain.link/)
+- [Sepolia Testnet](https://sepolia.dev/)
+- [GitHub Actions](https://docs.github.com/en/actions)
 
-```shell
-$ forge build
+---
+
+## 📂 Directory Structure
+
+```
+.
+├── src
+│   ├── FundMe.sol               # Core contract
+│   ├── PriceConverter.sol       # Library for conversion logic
+│
+├── script
+│   ├── DeployFundMe.s.sol       # Deploy script
+│   ├── HelperConfig.s.sol       # Network configuration and mocks
+│   └── Interactions.s.sol       # Script to interact with deployed contract
+│
+├── test                         # Unit tests
+└── foundry.toml                 # Foundry config
 ```
 
-### Test
+---
 
-```shell
-$ forge test
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) installed  
+- [Git](https://git-scm.com/)
+- Environment variable for Sepolia RPC URL
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Determ1n1st/foundry-fund-me-f25.git
+cd foundry-fund-me-f25
 ```
 
-### Format
+### 2. Set environment variable
 
-```shell
-$ forge fmt
+Create a `.env` file and add your Sepolia RPC URL and private key:
+
+```env
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/your_project_id
+PRIVATE_KEY=your_private_key
 ```
 
-### Gas Snapshots
+### 3. Install dependencies
 
-```shell
-$ forge snapshot
+```bash
+forge install
 ```
 
-### Anvil
+### 4. Run tests
 
-```shell
-$ anvil
+```bash
+forge test
 ```
 
-### Deploy
+### 5. Deploy locally (Anvil)
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```bash
+anvil
+# In a new terminal
+forge script script/DeployFundMe.s.sol --rpc-url http://127.0.0.1:8545 --private-key <PRIVATE_KEY> --broadcast
 ```
 
-### Cast
+### 6. Deploy to Sepolia
 
-```shell
-$ cast <subcommand>
+```bash
+forge script script/DeployFundMe.s.sol --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify
 ```
 
-### Help
+---
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+## 🧪 Testing with Mocks
+
+On local chains like **Anvil**, the script uses a **MockV3Aggregator** instead of a real Chainlink price feed.  
+This is handled via the `HelperConfig.s.sol` script and set automatically based on `block.chainid`.
+
+---
+
+## 🔐 Why This Project?
+
+This project is a hands-on implementation to better understand:
+
+- Security implications in funding logic
+- Handling owner-only permissions
+- Managing price feeds and mocks
+- Preparing for smart contract audits
+
+---
+
+## 📜 License
+
+[MIT](LICENSE)
